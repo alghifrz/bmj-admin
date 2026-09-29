@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --color-brand-green: #85c121;
+  --color-brand-green-deep: #4a7c14;
+  --color-brand-blue: #2177c6;
+  --color-medical-green: #85c121;
+  --color-medical-green-hover: #4a7c14;
+  --color-medical-green-soft: color-mix(in srgb, #85c121 16%, white);
+  --color-medical-blue: #2177c6;
+  --color-medical-blue-soft: color-mix(in srgb, #2177c6 12%, white);
+  --color-surface: #f4f7f8;
+  --color-line: #d9e2e8;
+  --color-ink: #243038;
+  --color-muted: #5c6b75;
+  --color-danger: #9f2c22;
+  --color-danger-soft: #fdecec;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dashboard-card {
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.02),
+    0 1px 2px -1px rgba(0, 0, 0, 0.02);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: chart-draw 900ms ease forwards;
+}
+
+.rise-in {
+  animation: rise-in 520ms ease both;
+}
+
+@keyframes chart-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-line,
+  .rise-in {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top left, var(--color-medical-blue-soft), transparent 28rem),
+    radial-gradient(circle at top right, var(--color-medical-green-soft), transparent 24rem),
+    var(--color-surface);
 }
