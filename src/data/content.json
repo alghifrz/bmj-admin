@@ -432,6 +432,8 @@
     "subtitle": "Ubah nama, email, dan password untuk masuk ke portal ini.",
     "name": "Nama",
     "email": "Email",
+    "showPassword": "Tampilkan kata sandi",
+    "hidePassword": "Sembunyikan kata sandi",
     "currentPassword": "Password saat ini",
     "currentPasswordHint": "Wajib diisi jika email atau password diganti.",
     "newPassword": "Password baru",

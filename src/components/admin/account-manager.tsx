@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import content from "@/data/content.json";
@@ -89,34 +89,30 @@ export function AccountManager({ admin }: { admin: AdminProfile }) {
           <Field error={errors.email} label={copy.email} required>
             <input className={fieldClass} inputMode="email" onChange={(event) => setDraft({ ...draft, email: event.target.value })} required type="email" value={draft.email} />
           </Field>
-          <Field error={errors.current_password} hint={copy.currentPasswordHint} label={copy.currentPassword}>
-            <input
-              autoComplete="current-password"
-              className={fieldClass}
-              onChange={(event) => setDraft({ ...draft, current_password: event.target.value })}
-              type="password"
-              value={draft.current_password}
-            />
-          </Field>
+          <PasswordField
+            autoComplete="current-password"
+            error={errors.current_password}
+            hint={copy.currentPasswordHint}
+            label={copy.currentPassword}
+            onChange={(current_password) => setDraft({ ...draft, current_password })}
+            value={draft.current_password}
+          />
           <span className="hidden sm:block" />
-          <Field error={errors.new_password} hint={copy.newPasswordHint} label={copy.newPassword}>
-            <input
-              autoComplete="new-password"
-              className={fieldClass}
-              onChange={(event) => setDraft({ ...draft, new_password: event.target.value })}
-              type="password"
-              value={draft.new_password}
-            />
-          </Field>
-          <Field error={errors.confirm_password} label={copy.confirmPassword}>
-            <input
-              autoComplete="new-password"
-              className={fieldClass}
-              onChange={(event) => setDraft({ ...draft, confirm_password: event.target.value })}
-              type="password"
-              value={draft.confirm_password}
-            />
-          </Field>
+          <PasswordField
+            autoComplete="new-password"
+            error={errors.new_password}
+            hint={copy.newPasswordHint}
+            label={copy.newPassword}
+            onChange={(new_password) => setDraft({ ...draft, new_password })}
+            value={draft.new_password}
+          />
+          <PasswordField
+            autoComplete="new-password"
+            error={errors.confirm_password}
+            label={copy.confirmPassword}
+            onChange={(confirm_password) => setDraft({ ...draft, confirm_password })}
+            value={draft.confirm_password}
+          />
         </div>
         <div className="mt-5 flex justify-end">
           <button className="rounded-xl bg-brand-green-deep px-4 py-2.5 text-sm font-semibold text-white hover:brightness-95 disabled:opacity-60" disabled={saving} type="submit">
@@ -141,6 +137,73 @@ function validateAccount(draft: Draft, originalEmail: string) {
   if (newPassword && confirm !== newPassword) errors.confirm_password = copy.errors.confirm;
   if (!newPassword && confirm) errors.confirm_password = copy.errors.confirmEmpty;
   return errors;
+}
+
+function PasswordField({
+  label,
+  hint,
+  error,
+  value,
+  autoComplete,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  error?: string;
+  value: string;
+  autoComplete: string;
+  onChange: (value: string) => void;
+}) {
+  const id = useId();
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div>
+      <label className="text-xs font-semibold text-slate-600" htmlFor={id}>
+        {label}
+      </label>
+      <div className="relative mt-1.5">
+        <input
+          autoComplete={autoComplete}
+          className={`${fieldClass} pr-11`}
+          id={id}
+          onChange={(event) => onChange(event.target.value)}
+          type={visible ? "text" : "password"}
+          value={value}
+        />
+        <button
+          aria-controls={id}
+          aria-label={visible ? copy.hidePassword : copy.showPassword}
+          aria-pressed={visible}
+          className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition-colors hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+          onClick={() => setVisible((current) => !current)}
+          type="button"
+        >
+          {visible ? <EyeOffIcon /> : <EyeIcon />}
+        </button>
+      </div>
+      {error ? <span className="mt-1 block text-xs text-rose-700">{error}</span> : hint ? <span className="mt-1 block text-xs text-slate-400">{hint}</span> : null}
+    </div>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M2.5 12S6 6.5 12 6.5 21.5 12 21.5 12 18 17.5 12 17.5 2.5 12 2.5 12Z" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="2.5" />
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M4 4.5 20 19.5" strokeLinecap="round" />
+      <path d="M9.5 9.8A3 3 0 0 0 12 15a3 3 0 0 0 2.2-1" strokeLinecap="round" />
+      <path d="M6.2 7.2C4.2 8.6 2.5 12 2.5 12S6 17.5 12 17.5c1.5 0 2.8-.4 4-.9M10.2 6.7A10 10 0 0 1 12 6.5c6 0 9.5 5.5 9.5 5.5a16 16 0 0 1-2.2 2.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
 }
 
 function Field({
