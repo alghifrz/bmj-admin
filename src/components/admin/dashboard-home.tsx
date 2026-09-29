@@ -335,11 +335,11 @@ function metricsFrom(data: DashboardPayload): Metric[] {
     },
     {
       label: labels[3].label,
-      value: rating === null ? labels[3].empty : rating.toFixed(1),
-      suffix: rating === null ? "" : labels[3].suffix,
+      value: rating === null ? (labels[3].empty ?? "—") : rating.toFixed(1),
+      suffix: rating === null ? "" : (labels[3].suffix ?? ""),
       icon: labels[3].icon,
       delta: String(data.reviews_published),
-      hint: rating === null ? labels[3].emptyHint : labels[3].hint,
+      hint: rating === null ? (labels[3].emptyHint ?? labels[3].hint) : labels[3].hint,
     },
   ];
 }
